@@ -23,6 +23,12 @@ public class Avi extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            int speed = 1;
+
+            motorFR.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + gamepad1.right_trigger - gamepad1.left_trigger - (gamepad1.right_stick_x * speed));
+            motorBR.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - gamepad1.right_trigger + gamepad1.left_trigger - (gamepad1.right_stick_x * speed));
+            motorFL.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - gamepad1.right_trigger + gamepad1.left_trigger + (gamepad1.right_stick_x * speed));
+            motorBL.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + gamepad1.right_trigger - gamepad1.left_trigger + (gamepad1.right_stick_x * speed));
 
         }
     }
