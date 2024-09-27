@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp (name = "Avi",group = "Linear OpMode")
 public class Avi extends LinearOpMode {
 
+    private ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFR;
     public DcMotor motorFL;
     public DcMotor motorBR;
@@ -21,6 +23,9 @@ public class Avi extends LinearOpMode {
         motorBR = hardwareMap.get(DcMotor.class, "motorBR");
         motorBL = hardwareMap.get(DcMotor.class, "motorBL");
 
+        waitForStart();
+        runtime.reset();
+
         while (opModeIsActive()) {
 
             int speed = 1;
@@ -29,6 +34,7 @@ public class Avi extends LinearOpMode {
             motorBR.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - gamepad1.right_trigger + gamepad1.left_trigger - (gamepad1.right_stick_x * speed));
             motorFL.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - gamepad1.right_trigger + gamepad1.left_trigger + (gamepad1.right_stick_x * speed));
             motorBL.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + gamepad1.right_trigger - gamepad1.left_trigger + (gamepad1.right_stick_x * speed));
+
 
         }
     }
