@@ -1,0 +1,11 @@
+----INSTRUCTIONS----
+
+Open this link to download the most recently updated "FtcRobotController-master" package:
+https://drive.google.com/drive/folders/1ro77ZyWyw0Aijj8IQtNeK9jxu5D53Ni2?usp=sharing
+
+Next, go through to this file url:
+FtcRobotController-master\TeamCode\src\main\java\org\firstinspires\ftc\teamcode\Teleop
+
+(Optional) Then download the code replacement from this repository and rename the file to the class name.
+
+Finally, switch out the code within this "Teleop" folder to whatever is updated on this repository or change the code already on there.
