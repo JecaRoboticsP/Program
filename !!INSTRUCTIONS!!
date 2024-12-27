@@ -6,6 +6,9 @@ https://drive.google.com/drive/folders/1ro77ZyWyw0Aijj8IQtNeK9jxu5D53Ni2?usp=sha
 Next, go through to this file url:
 FtcRobotController-master\TeamCode\src\main\java\org\firstinspires\ftc\teamcode\Teleop
 
-(Optional) Then download the code replacement from this repository and rename the file to the class name.
+(Optional) [ Then download the code replacement from this repository or this location: 
+https://github.com/JecaRoboticsP/Program/commit/6f1db6953b5344d76c6b9e6fb129e8804e87e00c
+
+Next, rename the file to the class name. ]
 
 Finally, switch out the code within this "Teleop" folder to whatever is updated on this repository or change the code already on there.
