@@ -45,18 +45,37 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 
 
-@Autonomous(name="Basic: Linear OpMode", group="Linear OpMode")
-public class Auton extends LinearOpMode {
+@Autonomous(name="CycledRightSide", group="Linear OpMode")
+public class Auton_M extends LinearOpMode {
 
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor motorFR = null;
-    DcMotor motorFL = null;
-    DcMotor motorBR = null;
-    DcMotor motorBL = null;
-    DcMotor biggerSucc = null;
+    private DcMotor motorFR = null;
+    private DcMotor motorFL = null;
+    private DcMotor motorBR = null;
+    private DcMotor motorBL = null;
+    private DcMotor tallStickL = null;
+    //Right linear slide
+    private DcMotor tallStickR = null;
+    //Left linear slide
 
+    private Servo Flapper = null;
+    //Intake turner on port 0 on Expansion Hub
+    private CRServo intake = null;
+    //Intake Servo on port 1 on Expansion Hub
+    private CRServo intake1 = null;
+    //Intake Servo on port 2 on Expansion Hub
+    private Servo LongSlide = null;
+    //Flipper extender port 4 Expansion Hub
+    private Servo Arm = null;
+    //Arm servos on linear slide port 0
+    private Servo Elbow = null;
+    //Elbow servos on arm port 1
+    private Servo Wrist = null;
+    //Wrist servo on elbow port 2
+    private Servo Grip = null;
+    //Block Gripper port 3
 
     @Override
     public void runOpMode() {
@@ -64,17 +83,29 @@ public class Auton extends LinearOpMode {
         telemetry.update();
 
 
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
         motorFR = hardwareMap.get(DcMotor.class, "motorFR");
         motorFL = hardwareMap.get(DcMotor.class, "motorFL");
         motorBR = hardwareMap.get(DcMotor.class, "motorBR");
         motorBL = hardwareMap.get(DcMotor.class, "motorBL");
-        biggerSucc = hardwareMap.get(DcMotor.class, "biggerSucc");
+        tallStickL = hardwareMap.get(DcMotor.class, "tallStickL");
+        tallStickR = hardwareMap.get(DcMotor.class, "tallStickR");
+
+        intake = hardwareMap.get(CRServo.class, "intake");
+        intake1 = hardwareMap.get(CRServo.class, "intake1");
+
+        Flapper = hardwareMap.get(Servo.class, "Flapper");
+        Grip = hardwareMap.get(Servo.class,"grip");
+        Arm = hardwareMap.get(Servo.class,"arm");
+        Elbow = hardwareMap.get(Servo.class,"elbow");
+        Wrist = hardwareMap.get(Servo.class,"wrist");
+        LongSlide = hardwareMap.get(Servo.class,"longSlide");
 
 
-
-        motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -98,78 +129,142 @@ public class Auton extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //ADD AUTON CODE HERE
+        startup();
+        holdScoringPiece(100);
 
-        // run until the end of the match (driver presses STOP)
+        moveForward(.5, 300);
+        moveStop(1, 200);
+        rotateRight(.5, 875);
+        moveStop(1, 200);
+        moveRight(.5, 400);
+        moveStop(1, 200);
+        moveBackward(.5, 575);
+        moveStop(1, 200);
 
-        while (opModeIsActive()) {
+        scoreSpeciman(200);
+        moveForward(.5, 150);
+        moveStop(1, 200);
+        Grip.setPosition(.18);
+        neutralPosition(200);
+        moveStop(1, 200);
 
-            static void moveForward(int speed, int time);
-            static void moveBackward(int speed, int time);
-            static void moveLeft(int speed, int time);
-            static void moveRight(int speed, int time);
+    }
+    //Function definitions
+    protected void moveForward(double speed, int time) {
+        motorBL.setPower(speed);
+        motorBR.setPower(speed);
+        motorFL.setPower(speed);
+        motorFR.setPower(speed);
 
-            //ADD AUTON CODE HERE
+        sleep(time);
+    }
 
-            //Function definitions
-           static void moveForward(int speed, int time)
-            {
-                motorBL.setPower(speed);
-                motorBR.setPower(speed);
-                motorFL.setPower(speed);
-                motorFR.setPower(speed);
+    protected void moveBackward(double speed, int time)
+    {
+        motorBL.setPower(-speed);
+        motorBR.setPower(-speed);
+        motorFL.setPower(-speed);
+        motorFR.setPower(-speed);
 
-                sleep(time);
+        sleep(time);
+    }
 
-                motorBL.setPower(0);
-                motorBR.setPower(0);
-                motorFL.setPower(0);
-                motorFR.setPower(0);
-            }
+    protected void moveLeft(double speed, int time)
+    {
+        motorBL.setPower(speed);
+        motorBR.setPower(-speed);
+        motorFL.setPower(-speed);
+        motorFR.setPower(speed);
 
-            static void moveBackward(int speed, int time)
-            {
-                motorBL.setPower(-speed);
-                motorBR.setPower(-speed);
-                motorFL.setPower(-speed);
-                motorFR.setPower(-speed);
+        sleep(time);
+    }
 
-                sleep(time);
+    protected void moveRight(double speed, int time)
+    {
+        motorBL.setPower(-speed);
+        motorBR.setPower(speed);
+        motorFL.setPower(speed);
+        motorFR.setPower(-speed);
 
-                motorBL.setPower(0);
-                motorBR.setPower(0);
-                motorFL.setPower(0);
-                motorFR.setPower(0);
-            }
+        sleep(time);
+    }
 
-            static void moveLeft(int speed, int time)
-            {
-                motorBL.setPower(-speed);
-                motorBR.setPower(speed);
-                motorFL.setPower(speed);
-                motorFR.setPower(-speed);
+    protected void moveStop(double speed, int time) {
+        motorBL.setPower(speed * 0);
+        motorBR.setPower(speed * 0);
+        motorFL.setPower(speed * 0);
+        motorFR.setPower(speed * 0);
 
-                sleep(time);
+        sleep(time);
+    }
 
-                motorBL.setPower(0);
-                motorBR.setPower(0);
-                motorFL.setPower(0);
-                motorFR.setPower(0);
-            }
+    protected void startup() {
+        Grip.setPosition(.18);
+        Wrist.setPosition(0);
+        LongSlide.setPosition(1);
+        Flapper.setPosition(0.10);
+    }
 
-            static void moveRight(int speed, int time)
-            {
-                motorBL.setPower(speed);
-                motorBR.setPower(-speed);
-                motorFL.setPower(-speed);
-                motorFR.setPower(speed);
+    protected void rotateRight(double speed, int time) {
+        motorBL.setPower(speed);
+        motorBR.setPower(-speed);
+        motorFL.setPower(speed);
+        motorFR.setPower(-speed);
 
-                sleep(time);
+        sleep(time);
+    }
 
-                motorBL.setPower(0);
-                motorBR.setPower(0);
-                motorFL.setPower(0);
-                motorFR.setPower(0);
-            }
-        }
+    protected void rotateLeft(double speed, int time) {
+        motorBL.setPower(-speed);
+        motorBR.setPower(speed);
+        motorFL.setPower(-speed);
+        motorFR.setPower(speed);
+
+        sleep(time);
+    }
+
+    protected void grabFromWall(int time) {
+        LongSlide.setPosition(.95);
+        Flapper.setPosition(0.10);
+        Arm.setPosition(.20);
+        Elbow.setPosition(.80);
+        Grip.setPosition(.18);
+        sleep(1000);
+        Grip.setPosition(0);
+
+        sleep(time);
+    }
+
+    protected void holdScoringPiece(int time) {
+        LongSlide.setPosition(1);
+        Flapper.setPosition(0.10);
+        Elbow.setPosition(.75);
+        Wrist.setPosition(.35);
+        Arm.setPosition(.70);
+        Grip.setPosition(0);
+
+        sleep(time);
+    }
+
+    protected void scoreSpeciman(int time) {
+        Grip.setPosition(0);
+        LongSlide.setPosition(1);
+        Flapper.setPosition(0.10);
+        Arm.setPosition(.40);
+        Elbow.setPosition(.25);
+
+        sleep(time);
+    }
+
+    protected void neutralPosition(int time) {
+        LongSlide.setPosition(1);
+        Flapper.setPosition(0.10);
+        Elbow.setPosition(.75);
+        Wrist.setPosition(.35);
+        Arm.setPosition(.80);
+        Grip.setPosition(.18);
+
+        sleep(time);
     }
 }
