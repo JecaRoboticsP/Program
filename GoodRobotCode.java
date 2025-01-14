@@ -106,7 +106,7 @@ public class GoodRobotCode extends LinearOpMode {
         tallStickL.setDirection(DcMotorSimple.Direction.REVERSE);
         tallStickR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        Grip.setPosition(.18);
+        Grip.setPosition(0);
         Wrist.setPosition(0);
         LongSlide.setPosition(1);
         Flapper.setPosition(0.10);
@@ -135,6 +135,35 @@ public class GoodRobotCode extends LinearOpMode {
             motorFL.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
             motorBL.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
 
+            //Slower Strafe D-pad Code
+            if (gamepad1.dpad_up)
+            {
+                motorBL.setPower(speed * .5);
+                motorBR.setPower(speed * .5);
+                motorFR.setPower(speed * .5);
+                motorFL.setPower(speed * .5);
+            }
+            else if (gamepad1.dpad_down)
+            {
+                motorBL.setPower(-speed * .5);
+                motorBR.setPower(-speed * .5);
+                motorFR.setPower(-speed * .5);
+                motorFL.setPower(-speed * .5);
+            }
+            else if (gamepad1.dpad_left)
+            {
+                motorBL.setPower(speed * .5);
+                motorBR.setPower(-speed * .5);
+                motorFR.setPower(speed * .5);
+                motorFL.setPower(-speed * .5);
+            }
+            else if (gamepad1.dpad_right)
+            {
+                motorBL.setPower(-speed * .5);
+                motorBR.setPower(speed * .5);
+                motorFR.setPower(-speed * .5);
+                motorFL.setPower(speed * .5);
+            }
             //Intake extender code
             if (gamepad1.a) {
                 LongSlide.setPosition(.55);
@@ -161,7 +190,7 @@ public class GoodRobotCode extends LinearOpMode {
 
             //Block Grip Code
             if (gamepad2.right_bumper) {
-                Grip.setPosition(.18);
+                Grip.setPosition(.30);
             } else if (gamepad2.left_bumper) {
                 Grip.setPosition(0);
             }
@@ -194,7 +223,7 @@ public class GoodRobotCode extends LinearOpMode {
                 LongSlide.setPosition(.95);
                 Flapper.setPosition(0.10);
                 Arm.setPosition(.20);
-                Elbow.setPosition(.65);
+                Elbow.setPosition(.80);
             } else if (gamepad2.x) {
                 //Drop position
                 LongSlide.setPosition(1);
