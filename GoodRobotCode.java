@@ -72,6 +72,8 @@ public class GoodRobotCode extends LinearOpMode {
     //Wrist servo on elbow port 2
     private Servo Grip = null;
     //Block Gripper port 3
+    static int[] slideMode = {2, 0};
+    //[0] stores which case is active; [1] checks if the operation has been completed
 
     @Override
     public void runOpMode() {
@@ -103,8 +105,6 @@ public class GoodRobotCode extends LinearOpMode {
 
         motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
-        tallStickL.setDirection(DcMotorSimple.Direction.REVERSE);
-        tallStickR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Grip.setPosition(0);
         Wrist.setPosition(0);
@@ -188,6 +188,18 @@ public class GoodRobotCode extends LinearOpMode {
 
             //Gamepad2 Code--------------------------------------------------------------------------------------------------------------------
 
+            //Linear Slide Code
+            if (gamepad2.left_stick_y < 0) {
+                tallStickL.setPower((-1)* sped);
+                tallStickR.setPower((1)* sped);
+            } else if (gamepad2.left_stick_y > 0) {
+                tallStickL.setPower((1)* sped);
+                tallStickR.setPower((-1)* sped);
+            } else {
+                tallStickL.setPower(0);
+                tallStickR.setPower(0);
+            }
+
             //Block Grip Code
             if (gamepad2.right_bumper) {
                 Grip.setPosition(.30);
@@ -210,7 +222,7 @@ public class GoodRobotCode extends LinearOpMode {
             }
 
             //Gamepad2 Arm Controls
-            if (gamepad2.a) {
+            /*if (gamepad2.a) {
                 //Grab from intake position
                 LongSlide.setPosition(1);
                 Flapper.setPosition(0.10);
@@ -230,7 +242,74 @@ public class GoodRobotCode extends LinearOpMode {
                 Flapper.setPosition(0.10);
                 Arm.setPosition(.40);
                 Elbow.setPosition(.25);
+
+                */
+            if (slideMode[1] == 1)
+            {
+
+                if (gamepad2.a)
+                {
+                    //grab from intake position
+                    slideMode[0] = 1;
+                    slideMode[1] = 0;
+                }
+                else if (gamepad2.b)
+                {
+                    //wall position
+                    slideMode[0] = 2;
+                    slideMode[1] = 0;
+                }
+                else if (gamepad2.x)
+                {
+                    //drop position
+                    slideMode[0] = 0;
+                    slideMode[1] = 0;
+                }
+
             }
+
+
+            if (slideMode[1] == 0) {
+
+                switch (slideMode[0]) {
+                    case 1:
+
+                        LongSlide.setPosition(1);
+                        Flapper.setPosition(0.10);
+                        Elbow.setPosition(.75);
+                        Wrist.setPosition(0);
+                        Arm.setPosition(.97);
+                        Grip.setPosition(0);
+
+                        slideMode[1] = 1;
+                        break;
+
+                    case 2:
+
+                        LongSlide.setPosition(.95);
+                        Flapper.setPosition(0.10);
+                        Arm.setPosition(.20);
+                        Elbow.setPosition(.80);
+
+                        slideMode[1] = 1;
+                        break;
+
+                    case 0:
+
+                        LongSlide.setPosition(1);
+                        Flapper.setPosition(0.10);
+                        Arm.setPosition(.40);
+                        Elbow.setPosition(.25);
+
+                        slideMode[1] = 1;
+                        break;
+
+                }
+
+            }
+
+
+
         }
     }
 }
