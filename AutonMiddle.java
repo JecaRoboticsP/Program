@@ -129,15 +129,20 @@ public class AutonMiddle extends LinearOpMode {
         waitForStart();
         runtime.reset();
         //ADD AUTON CODE HERE
+
+
+        //enters starting position
         startup();
         holdScoringPiece(100);
 
         //900 milliseconds per one tile at
 
+        //moves into scoring position
         moveBackward(.3, 830);
         rotateLeft(.3, 350);
         moveStop(1, 100);
 
+        //scores specimen
         scoreSpeciman(200);
         moveStop(1, 800);
         moveForward(.5, 150);
@@ -147,7 +152,14 @@ public class AutonMiddle extends LinearOpMode {
         neutralAfterScoringPosition(200);
         moveStop(1, 200);
 
+        /*rotateRight(.3, 350);
+        moveStop(1, 100);
+        moveLeft(1, 1000);
+        moveStop(1, 100);
+        moveBackward(1, 1000);
+        moveStop(1, 100);*/
     }
+
     //Function definitions
     protected void moveForward(double speed, int time) {
         motorBL.setPower(speed);
@@ -225,11 +237,10 @@ public class AutonMiddle extends LinearOpMode {
     protected void grabFromWall(int time) {
         LongSlide.setPosition(.95);
         Flapper.setPosition(0.10);
-        Arm.setPosition(.20);
-        Elbow.setPosition(.80);
-        Grip.setPosition(.18);
-        sleep(1000);
-        Grip.setPosition(0);
+        Arm.setPosition(.30);
+        Elbow.setPosition(.5);
+        Wrist.setPosition(.35);
+        Grip.setPosition(.30);
 
         sleep(time);
     }
@@ -249,7 +260,7 @@ public class AutonMiddle extends LinearOpMode {
         Grip.setPosition(0);
         LongSlide.setPosition(1);
         Flapper.setPosition(0.10);
-        Arm.setPosition(.40);
+        Arm.setPosition(.32);
         Elbow.setPosition(.25);
 
         sleep(time);
@@ -274,5 +285,10 @@ public class AutonMiddle extends LinearOpMode {
         Arm.setPosition(.80);
 
         sleep(time);
+    }
+
+    protected void linearSlideUp(double speed, int time) {
+        tallStickL.setPower(speed);
+        tallStickR.setPower(speed);
     }
 }

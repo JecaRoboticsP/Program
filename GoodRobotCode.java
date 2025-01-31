@@ -168,7 +168,7 @@ public class GoodRobotCode extends LinearOpMode {
             if (gamepad1.a) {
                 LongSlide.setPosition(.55);
                 sleep(500);
-                Flapper.setPosition(0);
+                Flapper.setPosition(.04);
             } else if (gamepad1.b) {
                 Flapper.setPosition(.10);
                 LongSlide.setPosition(1);
@@ -202,9 +202,9 @@ public class GoodRobotCode extends LinearOpMode {
 
             //Block Grip Code
             if (gamepad2.right_bumper) {
-                Grip.setPosition(.30);
-            } else if (gamepad2.left_bumper) {
                 Grip.setPosition(0);
+            } else if (gamepad2.left_bumper) {
+                Grip.setPosition(.30);
             }
 
             //Elbow Code
@@ -222,7 +222,7 @@ public class GoodRobotCode extends LinearOpMode {
             }
 
             //Gamepad2 Arm Controls
-            /*if (gamepad2.a) {
+            if (gamepad2.a) {
                 //Grab from intake position
                 LongSlide.setPosition(1);
                 Flapper.setPosition(0.10);
@@ -234,17 +234,17 @@ public class GoodRobotCode extends LinearOpMode {
                 //Wall position
                 LongSlide.setPosition(.95);
                 Flapper.setPosition(0.10);
-                Arm.setPosition(.20);
-                Elbow.setPosition(.80);
+                Arm.setPosition(.30);
+                Elbow.setPosition(.5);
+                Wrist.setPosition(.35);
             } else if (gamepad2.x) {
-                //Drop position
+                //Hold position
                 LongSlide.setPosition(1);
                 Flapper.setPosition(0.10);
-                Arm.setPosition(.40);
-                Elbow.setPosition(.25);
+                Arm.setPosition(.50);
+                Elbow.setPosition(.5);
 
-                */
-            if (slideMode[1] == 1)
+            /*if (slideMode[1] == 1)
             {
 
                 if (gamepad2.a)
@@ -304,7 +304,7 @@ public class GoodRobotCode extends LinearOpMode {
                         slideMode[1] = 1;
                         break;
 
-                }
+                } */
 
             }
 
