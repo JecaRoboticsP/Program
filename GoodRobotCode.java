@@ -130,34 +130,34 @@ public class GoodRobotCode extends LinearOpMode {
             //Gamepad1 Code--------------------------------------------------------------------------------------------------------------------
 
             //Driving Code
-            motorFR.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
-            motorBR.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
-            motorFL.setPower((gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
-            motorBL.setPower((gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
+            motorFR.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
+            motorBR.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
+            motorFL.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
+            motorBL.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
 
             //Slower Strafe D-pad Code
-            if (gamepad1.dpad_down)
+            if (gamepad1.dpad_up)
             {
                 motorBL.setPower(speed * .5);
                 motorBR.setPower(speed * .5);
                 motorFR.setPower(speed * .5);
                 motorFL.setPower(speed * .5);
             }
-            else if (gamepad1.dpad_up)
+            else if (gamepad1.dpad_down)
             {
                 motorBL.setPower(-speed * .5);
                 motorBR.setPower(-speed * .5);
                 motorFR.setPower(-speed * .5);
                 motorFL.setPower(-speed * .5);
             }
-            else if (gamepad1.dpad_right)
+            else if (gamepad1.dpad_left)
             {
                 motorBL.setPower(speed * .5);
                 motorBR.setPower(-speed * .5);
                 motorFR.setPower(speed * .5);
                 motorFL.setPower(-speed * .5);
             }
-            else if (gamepad1.dpad_left)
+            else if (gamepad1.dpad_right)
             {
                 motorBL.setPower(-speed * .5);
                 motorBR.setPower(speed * .5);

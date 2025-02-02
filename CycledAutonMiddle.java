@@ -138,7 +138,7 @@ public class CycledAutonMiddle extends LinearOpMode {
         //900 milliseconds per one tile at
 
         //moves into scoring position
-        moveBackward(.3, 830);
+        moveBackward(.3, 835);
         rotateLeft(.3, 350);
         moveStop(1, 100);
 
@@ -153,29 +153,37 @@ public class CycledAutonMiddle extends LinearOpMode {
         moveStop(1, 200);
 
         //cycle from score
-        moveForward(.4, 200);
+        moveForward(.4, 401);
         rotateRight(.4, 1200);
-        moveRight(.4,1700);
-        moveBackward(.4, 600);
-        moveForward(.4, 600);
+        moveRight(.4,2400);
+        moveBackward(.5, 1200);
+        moveForward(.5, 435);
         moveStop(1, 800);
         grabFromWall(200);
         moveStop(1, 1000);
+        Grip.setPosition(.30);
+        moveStop(1, 500);
+        moveBackward(.3, 200);
         Grip.setPosition(0);
         moveStop(1, 500);
-        holdScoringPiece(200);
+        holdScoringPiece(400);
         moveStop(1, 500);
-        moveLeft(.4, 1800);
+        moveForward(.5, 200);
         moveStop(1, 500);
-        rotateRight(.4, 1200);
+        moveLeft(.4, 2200);
+        moveStop(1, 500);
+        moveForward(.5, 400);
+        moveStop(1, 500);
+        rotateRight(.4, 1300);
         //
         moveBackward(.3, 600);
         rotateLeft(.3, 350);
+        moveForward(.3, 300);
         moveStop(1, 100);
-        //
+        //scores 2x
         scoreSpeciman(200);
         moveStop(1, 800);
-        moveForward(.5, 150);
+        moveForward(.5, 175);
         moveStop(1, 500);
         Grip.setPosition(.30);
         moveStop(1, 500);
