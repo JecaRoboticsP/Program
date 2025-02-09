@@ -72,6 +72,9 @@ public class GoodRobotCode extends LinearOpMode {
     //Wrist servo on elbow port 2
     private Servo Grip = null;
     //Block Gripper port 3
+    private Servo Test = null;
+    //Test on port 4
+    
     static int[] slideMode = {2, 0};
     //[0] stores which case is active; [1] checks if the operation has been completed
 
@@ -100,6 +103,7 @@ public class GoodRobotCode extends LinearOpMode {
         Elbow = hardwareMap.get(Servo.class,"elbow");
         Wrist = hardwareMap.get(Servo.class,"wrist");
         LongSlide = hardwareMap.get(Servo.class,"longSlide");
+        Test = hardwareMap.get(Servo.class, "Test");
 
         //controller = new PIDController(p, i, d);
 
@@ -184,6 +188,13 @@ public class GoodRobotCode extends LinearOpMode {
             } else {
                 intake.setPower(0);
                 intake1.setPower(0);
+            }
+
+            //Test 1 and 0 for servos code
+            if (gamepad1.x) {
+                Test.setPosition(0);
+            } else if (gamepad1.y) {
+                Test.setPosition(1);
             }
 
             //Gamepad2 Code--------------------------------------------------------------------------------------------------------------------
