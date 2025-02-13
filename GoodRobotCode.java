@@ -55,15 +55,14 @@ public class GoodRobotCode extends LinearOpMode {
     //Right linear slide
     private DcMotor tallStickR = null;
     //Left linear slide
+    private DcMotor LongSlide = null;
+
 
     private Servo Flapper = null;
-    //Intake turner on port 0 on Expansion Hub
-    private CRServo intake = null;
-    //Intake Servo on port 1 on Expansion Hub
-    private CRServo intake1 = null;
-    //Intake Servo on port 2 on Expansion Hub
-    private Servo LongSlide = null;
-    //Flipper extender port 4 Expansion Hub
+    //Leg turner on port 0 on Expansion Hub
+    private Servo knee = null;
+    private Servo ankle = null;
+    private Servo grippers = null;
     private Servo Arm = null;
     //Arm servos on linear slide port 0
     private Servo Elbow = null;
@@ -72,9 +71,6 @@ public class GoodRobotCode extends LinearOpMode {
     //Wrist servo on elbow port 2
     private Servo Grip = null;
     //Block Gripper port 3
-    private Servo Test = null;
-    //Test on port 4
-    
     static int[] slideMode = {2, 0};
     //[0] stores which case is active; [1] checks if the operation has been completed
 
@@ -93,17 +89,17 @@ public class GoodRobotCode extends LinearOpMode {
         motorBL = hardwareMap.get(DcMotor.class, "motorBL");
         tallStickL = hardwareMap.get(DcMotor.class, "tallStickL");
         tallStickR = hardwareMap.get(DcMotor.class, "tallStickR");
-
-        intake = hardwareMap.get(CRServo.class, "intake");
-        intake1 = hardwareMap.get(CRServo.class, "intake1");
+        LongSlide = hardwareMap.get(DcMotor.class,"longSlide");
 
         Flapper = hardwareMap.get(Servo.class, "Flapper");
+        knee = hardwareMap.get(Servo.class,"knee");
+        ankle = hardwareMap.get(Servo.class,"ankle");
+        grippers = hardwareMap.get(Servo.class,"grippers");
+
         Grip = hardwareMap.get(Servo.class,"grip");
         Arm = hardwareMap.get(Servo.class,"arm");
         Elbow = hardwareMap.get(Servo.class,"elbow");
         Wrist = hardwareMap.get(Servo.class,"wrist");
-        LongSlide = hardwareMap.get(Servo.class,"longSlide");
-        Test = hardwareMap.get(Servo.class, "Test");
 
         //controller = new PIDController(p, i, d);
 
@@ -112,7 +108,6 @@ public class GoodRobotCode extends LinearOpMode {
 
         Grip.setPosition(0);
         Wrist.setPosition(0);
-        LongSlide.setPosition(1);
         Flapper.setPosition(0.10);
 
         // Wait for the game to start (driver presses PLAY)
@@ -168,34 +163,6 @@ public class GoodRobotCode extends LinearOpMode {
                 motorFR.setPower(-speed * .5);
                 motorFL.setPower(speed * .5);
             }
-            //Intake extender code
-            if (gamepad1.a) {
-                LongSlide.setPosition(.55);
-                sleep(500);
-                Flapper.setPosition(.04);
-            } else if (gamepad1.b) {
-                Flapper.setPosition(.10);
-                LongSlide.setPosition(1);
-            }
-
-            //Intake Code
-            if (gamepad1.right_bumper) {
-                intake.setPower(1);
-                intake1.setPower(-1);
-            } else if (gamepad1.left_bumper) {
-                intake.setPower(-1);
-                intake1.setPower(1);
-            } else {
-                intake.setPower(0);
-                intake1.setPower(0);
-            }
-
-            //Test 1 and 0 for servos code
-            if (gamepad1.x) {
-                Test.setPosition(0);
-            } else if (gamepad1.y) {
-                Test.setPosition(1);
-            }
 
             //Gamepad2 Code--------------------------------------------------------------------------------------------------------------------
 
@@ -235,7 +202,6 @@ public class GoodRobotCode extends LinearOpMode {
             //Gamepad2 Arm Controls
             if (gamepad2.a) {
                 //Grab from intake position
-                LongSlide.setPosition(1);
                 Flapper.setPosition(0.10);
                 sleep(300);
                 Elbow.setPosition(.75);
@@ -244,7 +210,6 @@ public class GoodRobotCode extends LinearOpMode {
                 Grip.setPosition(0);
             } else if (gamepad2.b) {
                 //Wall position
-                LongSlide.setPosition(.95);
                 Flapper.setPosition(0.10);
                 Arm.setPosition(.30);
                 sleep(300);
@@ -252,7 +217,6 @@ public class GoodRobotCode extends LinearOpMode {
                 Wrist.setPosition(.35);
             } else if (gamepad2.x) {
                 //Hold position
-                LongSlide.setPosition(1);
                 Flapper.setPosition(0.10);
                 Arm.setPosition(.50);
                 sleep(300);
