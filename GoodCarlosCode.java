@@ -34,7 +34,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -42,9 +41,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 //192.168.49.1:8080/dash
 @Config
-@TeleOp(name="GoodRobotCode", group="Linear OpMode")
+@TeleOp(name="GoodCarlosCode", group="Linear OpMode")
 //@Disabled
-public class GoodRobotCode extends LinearOpMode {
+public class GoodCarlosCode extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -140,178 +139,63 @@ public class GoodRobotCode extends LinearOpMode {
 
             double speed = 1;
 
-            //Gamepad1 Code--------------------------------------------------------------------------------------------------------------------
-
             //Driving Code
             motorFR.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
             motorBR.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
             motorFL.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
             motorBL.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
 
-            //Long slide code
-            if (gamepad1.dpad_up) {
-                LongSlide.setPower(.5);
-            } else if (gamepad1.dpad_down) {
-                LongSlide.setPower(-.5);
-            } else {
-                LongSlide.setPower(0);
-            }
-
-            if(gamepad1.dpad_left) {
-                ankleL.setPosition(.1);
-            } else if (gamepad1.dpad_right) {
-                ankleL.setPosition(.4);
-            }
-
-            if (gamepad1.left_bumper)
-            {
-                grippers.setPosition(0);
-            }
-            else if (gamepad1.right_bumper)
-            {
-                grippers.setPosition(.5);
-            }
-
-            if (gamepad1.y) {
-                knees.setPosition(.5);
-                ankleL.setPosition(.4);
-                foot.setPosition(0);
-            } else if (gamepad1.x) {
+            if (gamepad1.a) {
                 knees.setPosition(.1);
                 ankleL.setPosition(.4);
                 foot.setPosition(0);
             } else if (gamepad1.b) {
-                grippers.setPosition(.5);
-                sleep(200);
-                ankleL.setPosition(0);
-                foot.setPosition(.7);
+                knees.setPosition(.3);
+                ankleL.setPosition(.4);
+                foot.setPosition(0);
+            } else if (gamepad1.x) {
+                knees.setPosition(.5);
+                ankleL.setPosition(.4);
+                foot.setPosition(0);
             }
 
-            //Gamepad2 Code--------------------------------------------------------------------------------------------------------------------
-
-            //Linear Slide Code
-            if (gamepad2.y) {
+            if (gamepad1.dpad_up) {
                 tallStickR.setTargetPosition(400);
                 tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 tallStickR.setPower(1);
                 tallStickL.setTargetPosition(400);
                 tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 tallStickL.setPower(1);
-            } else if (gamepad2.left_stick_y < 0) {
-                tallStickL.setPower((-1)* sped);
-                tallStickR.setPower((1)* sped);
-            } else {
-                tallStickL.setPower(0);
-                tallStickR.setPower(0);
-            }
-
-            //Block Grip Code
-            if (gamepad2.right_bumper) {
-                Grip.setPosition(0);
-            } else if (gamepad2.left_bumper) {
-                Grip.setPosition(.30);
-            }
-
-            //Elbow Code
-            if (gamepad2.dpad_up) {
-                Elbow.setPosition(.45);
-            } else if (gamepad2.dpad_down) {
-                Elbow.setPosition(.80);
-            }
-
-            //Wrist Code
-            if (gamepad2.dpad_left) {
-                Wrist.setPosition(0);
-            } else if (gamepad2.dpad_right) {
-                Wrist.setPosition(.35);
-            }
-
-            //Gamepad2 Arm Controls
-            if (gamepad2.a) {
-                //Grab from intake position
-                sleep(300);
-                Elbow.setPosition(.70);
-                Arm.setPosition(.8);
-                Wrist.setPosition(.35);
-                Grip.setPosition(.30);
-            } else if (gamepad2.b) {
-                //Wall/Score position
                 Arm.setPosition(.30);
                 sleep(300);
                 Elbow.setPosition(.80);
                 Wrist.setPosition(.35);
-            } else if (gamepad2.x) {
-                //Hold position
+            } else if (gamepad1.dpad_left) {
                 Arm.setPosition(.50);
                 sleep(300);
                 Elbow.setPosition(.5);
-
-            /*if (slideMode[1] == 1)
-            {
-
-                if (gamepad2.a)
-                {
-                    //grab from intake position
-                    slideMode[0] = 1;
-                    slideMode[1] = 0;
-                }
-                else if (gamepad2.b)
-                {
-                    //wall position
-                    slideMode[0] = 2;
-                    slideMode[1] = 0;
-                }
-                else if (gamepad2.x)
-                {
-                    //drop position
-                    slideMode[0] = 0;
-                    slideMode[1] = 0;
-                }
-
+            } else if (gamepad1.dpad_right) {
+                Arm.setPosition(.30);
+                sleep(300);
+                Elbow.setPosition(.80);
+                Wrist.setPosition(.35);
+            } else if (gamepad1.dpad_down) {
+                tallStickR.setTargetPosition(0);
+                tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                tallStickR.setPower(1);
+                tallStickL.setTargetPosition(0);
+                tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                tallStickL.setPower(1);
             }
 
-
-            if (slideMode[1] == 0) {
-
-                switch (slideMode[0]) {
-                    case 1:
-
-                        LongSlide.setPosition(1);
-                        Flapper.setPosition(0.10);
-                        Elbow.setPosition(.75);
-                        Wrist.setPosition(0);
-                        Arm.setPosition(.97);
-                        Grip.setPosition(0);
-
-                        slideMode[1] = 1;
-                        break;
-
-                    case 2:
-
-                        LongSlide.setPosition(.95);
-                        Flapper.setPosition(0.10);
-                        Arm.setPosition(.20);
-                        Elbow.setPosition(.80);
-
-                        slideMode[1] = 1;
-                        break;
-
-                    case 0:
-
-                        LongSlide.setPosition(1);
-                        Flapper.setPosition(0.10);
-                        Arm.setPosition(.40);
-                        Elbow.setPosition(.25);
-
-                        slideMode[1] = 1;
-                        break;
-
-                } */
-
+            //Block Grip Code
+            if (gamepad1.right_bumper) {
+                Grip.setPosition(0);
+                grippers.setPosition(.5);
+            } else if (gamepad1.left_bumper) {
+                Grip.setPosition(.30);
+                grippers.setPosition(0);
             }
-
-
-
         }
     }
 }
