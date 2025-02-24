@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Teleop;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -79,10 +79,12 @@ public class AutonomousEncoder extends LinearOpMode {
     private DcMotor LongSlide = null;
 
 
-    private Servo knees = null;
-    private Servo ankleL = null;
-    private Servo ankleR = null;
-    private Servo foot = null;
+    private Servo Flapper = null;
+    //Leg turner on port 0 on Expansion Hub
+    private Servo kneeR = null;
+    private Servo kneeL = null;
+
+    private Servo ankle = null;
     private Servo grippers = null;
     private Servo Arm = null;
     //Arm servos on linear slide port 0
@@ -91,11 +93,10 @@ public class AutonomousEncoder extends LinearOpMode {
     private Servo Wrist = null;
     //Wrist servo on elbow port 2
     private Servo Grip = null;
-    //Block Gripper port 3
     
     static int i = 0;
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime     runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -127,10 +128,10 @@ public class AutonomousEncoder extends LinearOpMode {
         tallStickR = hardwareMap.get(DcMotor.class, "tallStickR");
         LongSlide = hardwareMap.get(DcMotor.class,"longSlide");
 
-        knees = hardwareMap.get(Servo.class,"Knees");
-        foot = hardwareMap.get(Servo.class,"Foot");
-        ankleL = hardwareMap.get(Servo.class,"AnkleL");
-        ankleR = hardwareMap.get(Servo.class,"AnkleR");
+        Flapper = hardwareMap.get(Servo.class, "Flapper");
+        kneeL = hardwareMap.get(Servo.class,"Knee L");
+        kneeR = hardwareMap.get(Servo.class,"Knee R");
+        ankle = hardwareMap.get(Servo.class,"Ankle");
         grippers = hardwareMap.get(Servo.class,"Grippers");
 
         Grip = hardwareMap.get(Servo.class,"grip");
@@ -143,8 +144,7 @@ public class AutonomousEncoder extends LinearOpMode {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
-        tallStickL.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        
         //SetZeroPowerBehavior to brake
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -154,35 +154,28 @@ public class AutonomousEncoder extends LinearOpMode {
         //initialize ALL installed servos.
         Grip.setPosition(0);
         Wrist.setPosition(0);
-        knees.setPosition(1);
+        Flapper.setPosition(0.10);
+
 
         //set encoder values of every motor to 0
         motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tallStickL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tallStickR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        
         motorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tallStickL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tallStickR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d : %7d : %7d : %7d : %7d",
+        telemetry.addData("Starting at",  "%7d :%7d : %7d : %7d",
                 motorBL.getCurrentPosition(),
                 motorFL.getCurrentPosition(),
                 motorBR.getCurrentPosition(),
-                motorBL.getCurrentPosition(),
-                tallStickL.getCurrentPosition(),
-                tallStickR.getCurrentPosition());
+                motorBL.getCurrentPosition());
         telemetry.update();
-
-
+        
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -195,34 +188,7 @@ public class AutonomousEncoder extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, 20, -20, -20, 20, 5);
         sleep(100);
         encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 5);
-        encoderDrive(DRIVE_SPEED, 8.5, 8.5, 8.5, 8.5, 5);
-        tallStickR.setTargetPosition(450);
-        tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickR.setPower(1);
-        tallStickL.setTargetPosition(450);
-        tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickL.setPower(1);
-        sleep(500);
-        Arm.setPosition(.30);
-        sleep(300);
-        Elbow.setPosition(.80);
-        Wrist.setPosition(.35);
-        sleep(600);
-        tallStickR.setTargetPosition(300);
-        tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickR.setPower(1);
-        tallStickL.setTargetPosition(300);
-        tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickL.setPower(1);
-        Grip.setPosition(.3);
-        tallStickR.setTargetPosition(0);
-        tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickR.setPower(1);
-        tallStickL.setTargetPosition(0);
-        tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tallStickL.setPower(1);
-
-
+        sleep(1000);
 
         encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 5);
         sleep(100);
@@ -236,8 +202,11 @@ public class AutonomousEncoder extends LinearOpMode {
         sleep(100);
         encoderDrive(DRIVE_SPEED, 45, 45, 45, 45, 5);
         sleep(100);
-        encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 5);
-        encoderDrive(DRIVE_SPEED, -25, 25, 25, -25, 5);
+        encoderDrive(DRIVE_SPEED, -50, -50, -50, -50, 5);
+        sleep(100);
+        encoderDrive(DRIVE_SPEED, 5, -5, -5, 5, 5);
+        encoderDrive(DRIVE_SPEED, 45, 45, 45, 45, 5);
+
 
 
 

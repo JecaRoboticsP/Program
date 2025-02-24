@@ -39,8 +39,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
-//192.168.49.1:8080/dash
 @Config
 @TeleOp(name="GoodRobotCode", group="Linear OpMode")
 //@Disabled
@@ -59,10 +59,12 @@ public class GoodRobotCode extends LinearOpMode {
     private DcMotor LongSlide = null;
 
 
-    private Servo knees = null;
-    private Servo ankleL = null;
-    private Servo ankleR = null;
-    private Servo foot = null;
+    private Servo Flapper = null;
+    //Leg turner on port 0 on Expansion Hub
+    private Servo kneeR = null;
+    private Servo kneeL = null;
+
+    private Servo ankle = null;
     private Servo grippers = null;
     private Servo Arm = null;
     //Arm servos on linear slide port 0
@@ -92,10 +94,10 @@ public class GoodRobotCode extends LinearOpMode {
         tallStickR = hardwareMap.get(DcMotor.class, "tallStickR");
         LongSlide = hardwareMap.get(DcMotor.class,"longSlide");
 
-        knees = hardwareMap.get(Servo.class,"Knees");
-        foot = hardwareMap.get(Servo.class,"Foot");
-        ankleL = hardwareMap.get(Servo.class,"AnkleL");
-        ankleR = hardwareMap.get(Servo.class,"AnkleR");
+        Flapper = hardwareMap.get(Servo.class, "Flapper");
+        kneeL = hardwareMap.get(Servo.class,"Knee L");
+        kneeR = hardwareMap.get(Servo.class,"Knee R");
+        ankle = hardwareMap.get(Servo.class,"Ankle");
         grippers = hardwareMap.get(Servo.class,"Grippers");
 
         Grip = hardwareMap.get(Servo.class,"grip");
@@ -107,19 +109,17 @@ public class GoodRobotCode extends LinearOpMode {
 
         motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
-        LongSlide.setDirection((DcMotorSimple.Direction.REVERSE));
-        tallStickL.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        tallStickL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tallStickR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ankle.setPosition(.5);
+        kneeL.setPosition(.5);
+        kneeR.setPosition(.5);
 
-        tallStickL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tallStickR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    /*    telemetry.addData("Positions:", "%7d : %7d",
+                kneeL.getCurrentPosition();
+                kneeR.getCurrentPosition());
 
-        Grip.setPosition(0);
-        Wrist.setPosition(0);
-        knees.setPosition(1);
-
+        double kneel = kneeL.getCurrentPosition(); */
+        telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -130,12 +130,8 @@ public class GoodRobotCode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            double SlideUpL = tallStickL.getCurrentPosition();
-            double SlideUpR = tallStickR.getCurrentPosition();
-
-            telemetry.addData("SlidesPos", "(%.2f), (%.2f)",
-                    SlideUpR,
-                    SlideUpL);
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)");
             telemetry.update();
 
             double speed = 1;
@@ -143,63 +139,50 @@ public class GoodRobotCode extends LinearOpMode {
             //Gamepad1 Code--------------------------------------------------------------------------------------------------------------------
 
             //Driving Code
-            motorFR.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
-            motorBR.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
-            motorFL.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
-            motorBL.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
+            motorFR.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
+            motorBR.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) + (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
+            motorFL.setPower((-gamepad1.left_stick_y * speed) - (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) + gamepad1.left_trigger - gamepad1.right_trigger);
+            motorBL.setPower((-gamepad1.left_stick_y * speed) + (gamepad1.left_stick_x * speed) - (gamepad1.right_stick_x * speed) - gamepad1.left_trigger + gamepad1.right_trigger);
 
-            //Long slide code
-            if (gamepad1.dpad_up) {
-                LongSlide.setPower(.5);
-            } else if (gamepad1.dpad_down) {
-                LongSlide.setPower(-.5);
-            } else {
-                LongSlide.setPower(0);
-            }
-
-            if(gamepad1.dpad_left) {
-                ankleL.setPosition(.1);
-            } else if (gamepad1.dpad_right) {
-                ankleL.setPosition(.4);
-            }
-
-            if (gamepad1.left_bumper)
+            //Slower Strafe D-pad Code
+            if (gamepad1.dpad_up)
             {
-                grippers.setPosition(0);
+                motorBL.setPower(speed * .5);
+                motorBR.setPower(speed * .5);
+                motorFR.setPower(speed * .5);
+                motorFL.setPower(speed * .5);
             }
-            else if (gamepad1.right_bumper)
+            else if (gamepad1.dpad_down)
             {
-                grippers.setPosition(.5);
+                motorBL.setPower(-speed * .5);
+                motorBR.setPower(-speed * .5);
+                motorFR.setPower(-speed * .5);
+                motorFL.setPower(-speed * .5);
             }
-
-            if (gamepad1.y) {
-                knees.setPosition(.5);
-                ankleL.setPosition(.4);
-                foot.setPosition(0);
-            } else if (gamepad1.x) {
-                knees.setPosition(.1);
-                ankleL.setPosition(.4);
-                foot.setPosition(0);
-            } else if (gamepad1.b) {
-                grippers.setPosition(.5);
-                sleep(200);
-                ankleL.setPosition(0);
-                foot.setPosition(.7);
+            else if (gamepad1.dpad_left)
+            {
+                motorBL.setPower(speed * .5);
+                motorBR.setPower(-speed * .5);
+                motorFR.setPower(speed * .5);
+                motorFL.setPower(-speed * .5);
+            }
+            else if (gamepad1.dpad_right)
+            {
+                motorBL.setPower(-speed * .5);
+                motorBR.setPower(speed * .5);
+                motorFR.setPower(-speed * .5);
+                motorFL.setPower(speed * .5);
             }
 
             //Gamepad2 Code--------------------------------------------------------------------------------------------------------------------
 
             //Linear Slide Code
-            if (gamepad2.y) {
-                tallStickR.setTargetPosition(400);
-                tallStickR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                tallStickR.setPower(1);
-                tallStickL.setTargetPosition(400);
-                tallStickL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                tallStickL.setPower(1);
-            } else if (gamepad2.left_stick_y < 0) {
+            if (gamepad2.left_stick_y < 0) {
                 tallStickL.setPower((-1)* sped);
                 tallStickR.setPower((1)* sped);
+            } else if (gamepad2.left_stick_y > 0) {
+                tallStickL.setPower((1)* sped);
+                tallStickR.setPower((-1)* sped);
             } else {
                 tallStickL.setPower(0);
                 tallStickR.setPower(0);
@@ -214,9 +197,9 @@ public class GoodRobotCode extends LinearOpMode {
 
             //Elbow Code
             if (gamepad2.dpad_up) {
-                Elbow.setPosition(.45);
-            } else if (gamepad2.dpad_down) {
                 Elbow.setPosition(.80);
+            } else if (gamepad2.dpad_down) {
+                Elbow.setPosition(.45);
             }
 
             //Wrist Code
@@ -229,23 +212,40 @@ public class GoodRobotCode extends LinearOpMode {
             //Gamepad2 Arm Controls
             if (gamepad2.a) {
                 //Grab from intake position
+                Flapper.setPosition(0.10);
                 sleep(300);
-                Elbow.setPosition(.70);
-                Arm.setPosition(.8);
-                Wrist.setPosition(.35);
-                Grip.setPosition(.30);
+                Elbow.setPosition(.75);
+                Arm.setPosition(.97);
+                Wrist.setPosition(0);
+                Grip.setPosition(0);
             } else if (gamepad2.b) {
-                //Wall/Score position
+                //Wall position
+                Flapper.setPosition(0.10);
                 Arm.setPosition(.30);
                 sleep(300);
-                Elbow.setPosition(.80);
+                Elbow.setPosition(.5);
                 Wrist.setPosition(.35);
             } else if (gamepad2.x) {
                 //Hold position
+                Flapper.setPosition(0.10);
                 Arm.setPosition(.50);
                 sleep(300);
                 Elbow.setPosition(.5);
-
+                //move knees
+                if (gamepad1.b) {
+                    kneeL.setPosition(.8);
+                    kneeR.setPosition(.2);
+                    ankle.setPosition(0);
+                }
+                else if (gamepad1.a) {
+                    kneeL.setPosition(.2);
+                    kneeR.setPosition(.8);
+                    ankle.setPosition(1);
+                }
+                else {
+                    kneeL.setPosition(.5);
+                    kneeR.setPosition(.5);
+                }
             /*if (slideMode[1] == 1)
             {
 
@@ -307,6 +307,7 @@ public class GoodRobotCode extends LinearOpMode {
                         break;
 
                 } */
+
 
             }
 
